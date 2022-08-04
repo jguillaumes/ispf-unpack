@@ -1,0 +1,82 @@
+// Codi C#
+// Font: https://ibmmainframes.com/about59768-15.html
+
+private StringBuilder Unpack(MemoryStream memStream, int readCount, char recFm, int lRecl)
+{
+   byte[] upkTxt = new byte[255];      // One unpacked line.
+   int i = 0;
+   int j = 0;
+   int ll = 0;
+   byte ch = 0;
+   bool eol = false;
+
+   byte[] txt = new byte[readCount];   // Create a byte array and read stream into it.
+   memStream.Position = 0;
+   memStream.Read(txt, 0, readCount);
+
+   // Build an ASCII string - guess at 4x size of packed data.
+   StringBuilder sb = new StringBuilder(txt.Length * 4);   
+   while (i < txt.Length)
+   {
+      byte eb = txt[i++];     // eb = the next Ebcdic packed Byte
+      if (eb == 0xff)         // FF = EOF
+         break;
+
+      /* Cloned from Rexx Unpack from ***READ FORUM RULES***.NET board */
+      if (eb == 0xfc || eb == 0x7c)   // End of line
+      {
+         if (eb == 0xfc)             // FC has ll bytes of data following
+         {
+            ll = txt[i++];
+            for (int k = 0; k <= ll; k++) // Length count is 1 less than should be so <=
+               upkTxt[j++] = txt[i++];
+         }
+         if (eb == 0x7c)
+            i++;        // Skipping over count of trailing blanks in line
+         eol = true;
+      }
+      else
+         if (eb == 0x7a || eb == 0x7e)  // Repetitions of the next character
+         {
+            // 7e = but at the end of a maximum lngth logical record
+            ll = txt[i++];
+            ch = txt[i++];
+            for (int k = 0; k <= ll; k++) // Repeater count is 1 less than should be so <=
+               upkTxt[j++] = ch;
+         }
+         else
+            if (eb >= 0x80) // length = (value - 80 + 1) bytes of data following.
+            {
+               ll = eb - 0x80;
+               for (int k = 0; k <= ll; k++) // length count is 1 less than should be so <=
+                  upkTxt[j++] = txt[i++];
+            }
+            else
+            {                           // Repeat blanks.
+               ll = eb;
+               ch = 0x40;
+               for (int k = 0; k <= ll; k++) // Repeater count is 1 less than should be so <=
+                  upkTxt[j++] = ch;
+            }
+
+      // Uncomment line below to have a look a the unpacked line so far.
+      // string txtString = ConvertEbcdicToAscii(upkTxt, 0, j < 256 ? j : 255);
+
+
+      if (eol || j >= lRecl)  // End of line or we've gone over the LRECL.
+      {                       // Append to StringBuilder and start new line.
+         sb.Append(ConvertEbcdicToAscii(upkTxt, 0, j) + Environment.NewLine);
+         Array.Clear(upkTxt, 0, 255);
+         j = 0;
+         eol = false;
+      }
+   }
+   return sb;
+}
+
+private string ConvertEbcdicToAscii(byte[] ebcdic_bytes, int index, int length)
+{
+   char[] chars = new char[length];
+   EBCDICDecoder.GetChars(ebcdic_bytes, index, length, chars, 0);           
+   return new String(chars);
+}
