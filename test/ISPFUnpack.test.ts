@@ -7,8 +7,10 @@ describe("Unpack", () => {
     const packFileName = `${__dirname}/data/AGSM001.pack`; 
     const b = fs.readFileSync(packFileName)
     const bb = new Uint8Array(b);
-    const t = ISPFUnpackFB(bb, "ibm-1145", 133);
-    log(t);
+    const t = ISPFUnpackFB(bb, "ibm-1145");
+
+    fs.writeFileSync("out.txt", t);
+
 
 
 })
