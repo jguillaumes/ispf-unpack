@@ -1,8 +1,6 @@
-import { log } from "console";
-import { format } from "path";
 import { Codeset } from "./Codeset";
 
-export function ISPFUnpackFB(bytes:Uint8Array, codeset:string):string {
+export function ISPFUnpack(bytes:Uint8Array, codeset:string):string {
     const cs = new Codeset(codeset);
     const dv = new DataView(bytes.buffer);
 
@@ -42,8 +40,12 @@ export function ISPFUnpackFB(bytes:Uint8Array, codeset:string):string {
                 line[j++] = cs.decodeByte(ch);
             }
         } else if (eb === 0x78) {                  // Trobat per enginyera inversa
-            const ll = bytes[i++];                 // Sembla identic a 0x7c
-            // log(`0x78: ${ll.toString(16)} / ${ll}`);
+              const ll = bytes[i++];               // Sembla identic a 0x7a/0x7e assumint 
+              for (var k=0; k<=ll; k++) {          // el caràcter a repetir == ' '
+                line[j++] = ' ';
+              }
+              eol = true;
+//            // log(`0x78: ${ll.toString(16)} / ${ll}`);
         } else if (eb >= 0x80) {                   // eb-80+1 bytes a continuació
             const ll = eb - 0x80;
             for (var k=0; k<=ll; k++) {
@@ -56,10 +58,10 @@ export function ISPFUnpackFB(bytes:Uint8Array, codeset:string):string {
             }
         }
         if (eol || j >= lrecl) {
-            outBlock = outBlock.concat(line.slice(0,j).join("")).concat("\n");
+            outBlock = outBlock.concat(line.slice(0,j).join("").trimEnd()).concat("\n");
+            line = [];
             j = 0; 
             eol = false;
-            line = [];
         }
     }
     return outBlock;
