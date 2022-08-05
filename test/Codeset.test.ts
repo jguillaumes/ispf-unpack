@@ -56,7 +56,7 @@ describe('Multiline 1145', () => {
     const expectedEbcdic = new Uint8Array([
         198,137,153,162,163,64,147,137,149,
         133,37,226,133,131,150,149,132,64,
-        147,137,149,132
+        147,137,149,133
     ]);
     // log(`initial string :\n ${initString}`);
 
