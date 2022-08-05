@@ -1,2 +1,2 @@
 export { Codeset } from "./Codeset";
-export { ISPFUnpackFB } from "./ISPFUnpack";
+export { ISPFUnpack as ISPFUnpackFB } from "./ISPFUnpack";
