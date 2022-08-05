@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import { log } from 'console';
 import * as fs from 'fs';
-import { ISPFUnpackFB} from '../src';
+import "../src/ISPFUnpack"
+import { ISPFUnpack } from '../src/ISPFUnpack';
 
 describe("Unpack", () => {
 
@@ -10,7 +11,7 @@ describe("Unpack", () => {
     const textFileName = `${__dirname}/data/AGSM000.txt`; 
     const b = fs.readFileSync(packFileName);
     const bb = new Uint8Array(b);
-    const t = ISPFUnpackFB(bb, "ibm-1145");
+    const t = ISPFUnpack(bb, "ibm-1145");
     // fs.writeFileSync("out.txt", t);
     const unpacked_lines = t.split(/\r?\n/);
 
