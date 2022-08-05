@@ -2,13 +2,18 @@
   "name": "ispf-unpack",
   "version": "1.0.0",
   "description": "Unpack TSO/ISPF members. Codepage conversions",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "files": [
-    "/dist"
+    "/dist/src",
+    "/dist/tables"
   ],
   "scripts": {
-    "compile": "tsc -p ./",
+    "compile": "tsc -p ./ && cp -r ./tables ./dist/tables   ",
+    "build": "npm run compile",
+    "clean": "rm -rf dist",
+    "package": "npm run clean && npm run build && npm pack",
+    "distribute": "npm publish --registry https://nexus.jguillaumes.dyndns.org/repository/npm-local/",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register --colors true --inline-diffs true --bail false 'test/**/*.ts'"
   },
   "keywords": [
