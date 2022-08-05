@@ -1,7 +1,7 @@
 {
-  "name": "zos-text-utils",
+  "name": "ispf-unpack",
   "version": "1.0.0",
-  "description": "Z/OS Text utilities",
+  "description": "Unpack TSO/ISPF members. Codepage conversions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
