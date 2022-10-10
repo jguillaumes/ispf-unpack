@@ -1,6 +1,6 @@
 {
   "name": "ispf-unpack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Unpack TSO/ISPF members. Codepage conversions",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -13,7 +13,8 @@
     "build": "npm run compile",
     "clean": "rm -rf dist",
     "package": "npm run clean && npm run build && npm pack",
-    "distribute": "npm publish --registry https://nexus.jguillaumes.dyndns.org/repository/npm-local/",
+    "distribute-local": "npm publish --registry https://nexus.jguillaumes.dyndns.org/repository/npm-local/",
+    "distribute": "npm publish --registry https://artifacts.cloud.caixabank.com/artifactory/arq-cloud-npm-artifacts-local/SYFALM/",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register --colors true --inline-diffs true --bail false 'test/**/*.ts'"
   },
   "keywords": [
