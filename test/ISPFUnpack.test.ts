@@ -1,14 +1,14 @@
 import { expect } from 'chai';
 import { log } from 'console';
 import * as fs from 'fs';
-import "../src/ISPFUnpack"
+import "../src/ISPFUnpack";
 import { ISPFUnpack } from '../src/ISPFUnpack';
 
 describe("Unpack FB", () => {
 
     log("Testing ISPF UNPACK for a FB file ...")
-    const packFileName = `${__dirname}/data/AGSM000.pack`; 
-    const textFileName = `${__dirname}/data/AGSM000.txt`; 
+    const packFileName = `${__dirname}/data/packfb.bin`; 
+    const textFileName = `${__dirname}/data/packfb.txt`; 
     const b = fs.readFileSync(packFileName);
     const bb = new Uint8Array(b);
     const t = ISPFUnpack(bb, "ibm-1145");
@@ -26,8 +26,9 @@ describe("Unpack FB", () => {
 describe("Unpack VB", () => {
 
     log("Testing ISPF UNPACK for a VB file ...")
-    const packFileName = `${__dirname}/data/AGSM000vb.pack`; 
-    const textFileName = `${__dirname}/data/AGSM000.txt`; 
+    const packFileName = `${__dirname}/data/packvb.bin`; 
+    // const packFileName = `${__dirname}/data/agsm000vb.pack`; 
+    const textFileName = `${__dirname}/data/packvb.txt`; 
     const b = fs.readFileSync(packFileName);
     const bb = new Uint8Array(b);
     const t = ISPFUnpack(bb, "ibm-1145");
