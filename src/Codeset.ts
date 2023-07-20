@@ -7,15 +7,16 @@ export class Codeset {
 
     constructor(codesetName:string) {
         this._codesetName = codesetName;
-        const tableFile = `${__dirname}/../tables/${codesetName}.txt`;    
+        const tableFile = `${__dirname}/../tables/${codesetName}.txt`;
         fs.readFileSync(tableFile)
             .toString("utf-8")
             .split(/\r?\n/)
             .forEach(l=>{
                 const tl = l.trim();
                 if (tl.charAt(0) !== "#") {
-                    const sourceChar = Number(tl.substring(0,4));
-                    const codePoint  = String.fromCharCode(Number(tl.substring(5,11)));
+                    const entries = tl.split("\t");
+                    const sourceChar = Number(entries[0]);
+                    const codePoint  = String.fromCharCode(Number(entries[1]));
                     this._decodeMap.set(sourceChar, codePoint);
                     this._encodeMap.set(codePoint, sourceChar);
                 }
@@ -23,23 +24,23 @@ export class Codeset {
     }
 
     public decodeByte(b:number):string {
-        return this._decodeMap.get(b);
+        return this._decodeMap.get(b) as string;
     }
 
     public encodeChar(c:string):number {
-        return this._encodeMap.get(c);
+        return this._encodeMap.get(c) as number;
     }
 
     public encodeString(s:string):Uint8Array {
         const newArray = new Uint8Array(s.length);
         s.split("").map(c =>this._encodeMap.get(c))
-                   .forEach((n,i) => newArray[i] = n);
+                   .forEach((n,i) => newArray[i] = n as number);
         return newArray;
     }
 
     public decodeArray(a:Uint8Array):string {
         let outString:string = ""
-        a.forEach((b,i) => outString = outString.concat(this._decodeMap.get(b)));
+        a.forEach((b,i) => outString = outString.concat(this._decodeMap.get(b) as string));
         return outString;
     }
 
